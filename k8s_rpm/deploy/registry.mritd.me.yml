@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: registry.mritd.me 
-  namespace: default
-data:
-  .dockerconfigjson: VjIxemVHVkdTWGxYYmxwU1RVVmFWMVZxVG01TlIxRjNWMnRzYUUxRmNEQldSM2hoVFRGWmVWZHVWa1JhZWpBNVEyYzlQUW89Cg==  
-type: kubernetes.io/dockerconfigjson
