@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nginx-default-443
+  namespace: default
+spec:
+  tls:
+  - hosts:
+    - nginx.cinyi.com
+    - shanghai.cinyi.com
+    secretName: ingress-secret
+  rules:
+  - host: nginx.cinyi.com
+    http:
+      paths:
+      - backend:
+          serviceName: nginx-default
+          servicePort: 80
+  - host: shanghai.cinyi.com
+    http:
+      paths:
+      - backend:
+          serviceName: shanghai-project
+          servicePort: 80

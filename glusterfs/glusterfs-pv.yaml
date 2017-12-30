@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: gluster-dev-volume
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Recycle
+  #storageClassName: fengjian
+  glusterfs:
+    endpoints: "glusterfs-cluster"
+    path: "gv0"
+    readOnly: false

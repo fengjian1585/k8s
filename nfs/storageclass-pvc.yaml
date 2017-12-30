@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: managed-nfs-storage-pvc
+  annotations: 
+    volume.beta.kubernetes.io/storage-class: managed-nfs-storage
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi

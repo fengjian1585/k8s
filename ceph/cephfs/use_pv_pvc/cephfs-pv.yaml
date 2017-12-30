@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: cephfs-test-pv
+spec:
+  capacity:
+    storage: 13Gi
+  accessModes:
+    - ReadWriteMany
+  cephfs:
+    monitors:
+      - 192.168.20.223:6789
+      - 192.168.20.224:6789
+      - 192.168.20.225:6789
+    path: /
+    user: admin
+    readOnly: false
+    secretRef:
+        name: ceph-secret
+  persistentVolumeReclaimPolicy: Recycle

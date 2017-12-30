@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nginx-default
+  namespace: default
+spec:
+  rules:
+  - host: nginx.cinyi.com
+    http:
+      paths:
+      - backend:
+          serviceName: nginx
+          servicePort: 80
+  - host: shanghai.cinyi.com
+    http:
+      paths:
+      - backend:
+          serviceName: tomcat
+          servicePort: 8080

@@ -1,0 +1,44 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: cephfs-nginx
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: cephfs-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: docker.cinyi.com:443/senyint/nginx:v.11
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: "/data/nginx/html"
+          name: cephfs
+      volumes:
+      - name: cephfs
+        cephfs:
+          monitors:
+          - 192.168.20.223:6789
+          - 192.168.20.224:6789
+          - 192.168.20.225:6789
+          user: admin
+          secretRef:
+            name: ceph-secret
+          readOnly: false
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cephfs-nginx
+  labels:
+    app: cephfs-nginx
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+  selector:
+    app: cephfs-nginx

@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1 
+kind: Deployment 
+metadata: 
+  name: nginx-gluster
+spec: 
+  replicas: 2
+  template: 
+    metadata: 
+      labels: 
+        name: nginx-gluster
+    spec: 
+      containers: 
+        - name: nginx-gluster 
+          image: docker.cinyi.com:443/senyint/nginx:v.11 
+          imagePullPolicy: IfNotPresent
+          ports: 
+            - containerPort: 80
+          volumeMounts:
+            - name: gluster-dev-volume
+              mountPath: "/data/nginx/html"
+      volumes:
+      - name: gluster-dev-volume
+        persistentVolumeClaim:
+          claimName: glusterfs-nginx
+

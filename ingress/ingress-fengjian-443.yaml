@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nginx-fengjian-443
+  namespace: fengjian
+spec:
+  tls:
+  - hosts:
+    - feng.cinyi.com
+    secretName: ingress-secret-fengjian
+  rules:
+  - host: feng.cinyi.com
+    http:
+      paths:
+      - backend:
+          serviceName: my-nginx-fengjian
+          servicePort: 80

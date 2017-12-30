@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nfs-pvc-test
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nfs-pvc-test
+    spec:
+      containers:
+      - name: nginx
+        image: docker.cinyi.com:443/nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: www 
+        persistentVolumeClaim:
+          claimName: managed-nfs-storage-pvc
+          
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nfs-pvc-test
+  labels:
+    app: nfs-pvc-test
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+  selector:
+    app: nfs-pvc-test
