@@ -1,17 +1,17 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: nginx-fengjian-443
-  namespace: fengjian
+  name: nginx-proxy-kubesystem-443
+  namespace: kube-system
 spec:
   tls:
   - hosts:
-    - feng.cinyi.com
-    secretName: ingress-secret-fengjian
+    - dashboard.cinyi.com
+    secretName: ingress-secret-kube-system
   rules:
-  - host: feng.cinyi.com
+  - host: dashboard.cinyi.com
     http:
       paths:
       - backend:
-          serviceName: my-nginx-fengjian
-          servicePort: 80
+          serviceName: kubernetes-dashboard
+          servicePort: 443

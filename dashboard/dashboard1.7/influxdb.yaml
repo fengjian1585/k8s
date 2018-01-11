@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: influxdb
-        image: docker.cinyi.com:443/heapster-influxdb-amd64:v1.3.3
+        image: docker.cinyi.com:443/google_containers/heapster-influxdb-amd64:v1.3.3
         volumeMounts:
         - mountPath: /data
           name: influxdb-storage
@@ -26,14 +26,11 @@ kind: Service
 metadata:
   labels:
     task: monitoring
-    # For use as a Cluster add-on (https://github.com/kubernetes/kubernetes/tree/master/cluster/addons)
-    # If you are NOT using this as an addon, you should comment out this line.
     kubernetes.io/cluster-service: 'true'
     kubernetes.io/name: monitoring-influxdb
   name: monitoring-influxdb
   namespace: kube-system
 spec:
-  type: NodePort
   ports:
   - port: 8086
     targetPort: 8086

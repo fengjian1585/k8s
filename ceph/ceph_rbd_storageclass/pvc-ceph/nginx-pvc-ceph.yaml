@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-ceph-storageclass-pvc
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx-ceph-storage-pvc
+    spec:
+      containers:
+      - name: nginx
+        image: docker.cinyi.com:443/nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: www 
+        persistentVolumeClaim:
+          claimName: ceph-nginx-pvc
+          
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-ceph-storage-pvc
+  labels:
+    app: nginx-ceph-storage-pvc
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+  selector:
+    app: nginx-ceph-storage-pvc

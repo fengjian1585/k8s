@@ -114,11 +114,13 @@ spec:
     spec:
       containers:
       - name: kubernetes-dashboard
-        image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.8.1
+        image: docker.cinyi.com:443/google_containers/kubernetes-dashboard-amd64:v1.8.1
         ports:
         - containerPort: 8443
           protocol: TCP
         args:
+#          - --tls-key-file=dashboard.key  
+#          - --tls-cert-file=dashboard.crt 
           - --auto-generate-certificates
           # Uncomment the following line to manually specify Kubernetes API server Host
           # If not specified, Dashboard will attempt to auto discover the API server and connect
@@ -160,6 +162,7 @@ metadata:
   name: kubernetes-dashboard
   namespace: kube-system
 spec:
+  type: NodePort
   ports:
     - port: 443
       targetPort: 8443

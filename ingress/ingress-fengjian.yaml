@@ -11,3 +11,9 @@ spec:
       - backend:
           serviceName: kibana-logging
           servicePort: 5601
+#  - host: dashboard.cinyi.com
+#    http:
+#      paths:
+#      - backend:
+#          serviceName: kubernetes-dashboard
+#          servicePort: 443

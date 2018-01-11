@@ -1,12 +1,14 @@
-kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
 metadata:
-  name: heapster
+  name: kubernetes-dashboard
+  labels:
+    k8s-app: kubernetes-dashboard
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: system:heapster
+  name: cluster-admin
 subjects:
 - kind: ServiceAccount
-  name: heapster
+  name: kubernetes-dashboard
   namespace: kube-system
