@@ -1,0 +1,11 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: cephfs-bi-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: cephfs-bi-pv
+  resources:
+    requests:
+      storage: 10Gi

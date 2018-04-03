@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: cephfs-bi-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  cephfs:
+    monitors:
+      - 192.168.200.22:6789
+      - 192.168.200.23:6789
+      - 192.168.200.24:6789
+    path: /bilog
+    user: admin
+    readOnly: false
+    secretRef:
+        name: ceph-secret
+  persistentVolumeReclaimPolicy: Recycle

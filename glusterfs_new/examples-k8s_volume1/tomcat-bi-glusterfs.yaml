@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: tomcat-bi
+spec:
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: tomcat-bi
+    spec:
+      containers:
+      - name: tomcat
+        image: 192.168.200.10/senyint/family/tomcat8:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: logs
+          mountPath: /data/tomcat/logs
+      volumes:
+      - name: logs
+        glusterfs:
+          endpoints: glusterfs-node1-node2-volume
+          path: node1-node2-volume
+          readOnly: false
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tomcat-bi
+  labels:
+    app: tomcat-bi
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+  selector:
+    app: tomcat-bi

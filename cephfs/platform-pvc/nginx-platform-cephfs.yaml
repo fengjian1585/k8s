@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-platform
+spec:
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: nginx-platform
+    spec:
+      containers:
+      - name: nginx
+        image: 192.168.200.10/senyint/nginx:v.11
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: logs
+          mountPath: /data/nginx/logs
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: cephfs-platform-pvc
+          
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-platform
+  labels:
+    app: nginx-platform
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+  selector:
+    app: nginx-platform

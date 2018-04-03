@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: tomcat-bi
+spec:
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: tomcat-bi
+    spec:
+      containers:
+      - name: tomcat
+        image: 192.168.200.10/senyint/family/tomcat8:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: logs
+          mountPath: /data/tomcat/logs
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: cephfs-bi-pvc
+          
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tomcat-bi
+  labels:
+    app: tomcat-bi
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+  selector:
+    app: tomcat-bi

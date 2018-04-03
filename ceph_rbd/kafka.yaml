@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-svc
+  labels:
+    app: kafka
+spec:
+  ports:
+  - port: 9093
+    name: server
+  selector:
+    app: kafka
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: kafka-pdb
+spec:
+  selector:
+    matchLabels:
+      app: kafka
+  minAvailable: 2
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: kafka
+spec:
+  serviceName: kafka-svc
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values: 
+                    - kafka
+              topologyKey: "kubernetes.io/hostname"
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+             - weight: 1
+               podAffinityTerm:
+                 labelSelector:
+                    matchExpressions:
+                      - key: "app"
+                        operator: In
+                        values: 
+                        - zk
+                 topologyKey: "kubernetes.io/hostname"
+      terminationGracePeriodSeconds: 300
+      containers:
+      - name: k8skafka
+        imagePullPolicy: Always
+        image: 192.168.200.10/source/kafka:v30
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: 500m
+        env:
+        - name: KF_REPLICAS
+          value: "3"
+        ports:
+        - containerPort: 9093
+          name: server
+        command:
+        - /bin/bash
+        - -c
+        - "/opt/kafka/bin/kafkaGenConfig.sh && /opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties"
+        env:
+        - name: KAFKA_HEAP_OPTS
+          value : "-Xmx2048M -Xms2048M"
+        - name: KAFKA_OPTS
+          value: "-Dlogging.level=DEBUG"
+        readinessProbe:
+           tcpSocket:
+             port: 9092
+           initialDelaySeconds: 15
+           timeoutSeconds: 1
+        volumeMounts:
+        - name: datadir
+          mountPath: /var/lib/kafka/data
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+      annotations:
+        volume.beta.kubernetes.io/storage-class: "ceph-rbd-provisioner"
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 100Gi
+      storageClassName: ceph-rbd-provisioner

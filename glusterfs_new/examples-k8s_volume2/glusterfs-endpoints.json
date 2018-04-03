@@ -1,0 +1,33 @@
+{
+  "kind": "Endpoints",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "glusterfs-node3-node4-volume"
+  },
+  "subsets": [
+    {
+      "addresses": [
+        {
+          "ip": "192.168.200.23"
+        }
+      ],
+      "ports": [
+        {
+          "port": 1990
+        }
+      ]
+    },
+    {
+      "addresses": [
+        {
+          "ip": "192.168.200.24"
+        }
+      ],
+      "ports": [
+        {
+          "port": 1990
+        }
+      ]
+    }
+  ]
+}
